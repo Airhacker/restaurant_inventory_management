@@ -32,7 +32,7 @@ export default function Sidebar() {
   return (
     <div className="w-64 min-h-screen bg-white border-r flex flex-col justify-between">
       <div>
-        <div className="p-6 font-bold text-xl">Restaurant App</div>
+        <div className="p-6 font-bold text-xl">Restaurant Inventory Management App</div>
         <nav className="flex flex-col">
           {menuItems.map((item) => (
             <Link
