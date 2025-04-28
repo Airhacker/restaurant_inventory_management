@@ -3,7 +3,9 @@ import { inventoryData, menuData, ordersData, foodUsageData } from '../lib/data'
 export default function HomePage() {
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-4xl font-bold mb-10 text-center">Welcome to Restaurant Management App</h1>
+      <h1 className="text-4xl font-bold mb-10 text-center">
+        Welcome to Restaurant Inventory Management App
+      </h1>
 
       <div className="flex flex-col gap-8">
         {/* Inventory Card */}
