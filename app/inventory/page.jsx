@@ -20,7 +20,7 @@ export default function InventoryPage() {
 
     const newEntry = {
       item: newItem,
-      quantity: `${newQuantity} lbs`, // Automatically append "lbs"
+      quantity: `${newQuantity} lbs`,
       expiration: newExpiration,
     };
 
