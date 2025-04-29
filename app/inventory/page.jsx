@@ -1,59 +1,54 @@
 'use client';
 
 import { useState } from 'react';
-import { inventoryData } from '../../lib/data';
-import { toast } from 'sonner'; // For showing toast notifications
+import { inventoryData, outOfStockData } from '../../lib/data';
+import { toast } from 'sonner';
 
 export default function InventoryPage() {
-  // State to manage inventory items
   const [inventory, setInventory] = useState(inventoryData);
-
-  // State for new item form inputs
+  const [outOfStock, setOutOfStock] = useState(outOfStockData);
   const [newItem, setNewItem] = useState('');
   const [newQuantity, setNewQuantity] = useState('');
   const [newExpiration, setNewExpiration] = useState('');
 
-  // Handle adding a new item to inventory
   const handleAddItem = (e) => {
     e.preventDefault();
     if (!newItem || newQuantity === '' || !newExpiration) return;
 
+    // Quantity format to include "lbs"
+    const quantityFormatted = `${newQuantity} lbs`;
+
     const newEntry = {
       item: newItem,
-      quantity: `${newQuantity} lbs`,
+      quantity: quantityFormatted,
       expiration: newExpiration,
     };
+
+    // If quantity is 0, add to out-of-stock list
+    if (parseInt(newQuantity) === 0) {
+      setOutOfStock((prev) => [...prev, newItem]);
+    }
 
     setInventory([...inventory, newEntry]);
     toast.success('Item added to inventory');
 
-    // Clear form fields
     setNewItem('');
     setNewQuantity('');
     setNewExpiration('');
   };
 
-  // Handle deleting an item from inventory
   const handleDeleteItem = (index) => {
     const updatedInventory = [...inventory];
     updatedInventory.splice(index, 1);
     setInventory(updatedInventory);
-
     toast.success('Item removed from inventory');
   };
 
-  // Columns for the main inventory table
-  const columns = ['Item', 'Quantity', 'Expiration', 'Actions'];
-
-  // Out of Stock items based only on original inventoryData
-  const outOfStockItems = inventoryData.filter((item) => parseInt(item.quantity) === 0);
-
   return (
     <div>
-      {/* Page Title */}
       <h1 className="text-2xl font-bold mb-6">Inventory Overview</h1>
 
-      {/* Form to Add New Inventory Items */}
+      {/* Add New Item Form */}
       <form onSubmit={handleAddItem} className="space-y-4 bg-white p-6 rounded-lg shadow mb-10">
         <div>
           <label className="block mb-1 font-medium">Item Name</label>
@@ -66,7 +61,7 @@ export default function InventoryPage() {
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Quantity (lbs)</label>
+          <label className="block mb-1 font-medium">Quantity</label>
           <input
             type="number"
             value={newQuantity}
@@ -95,39 +90,30 @@ export default function InventoryPage() {
 
       {/* Main Inventory Table */}
       <div className="overflow-x-auto bg-white shadow rounded-lg mb-12">
+        <h2 className="text-xl font-bold p-6 pb-0">Available Inventory</h2>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
-              {columns.map((col) => (
-                <th
-                  key={col}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  {col}
-                </th>
-              ))}
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Item
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Quantity
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Expiration
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
-
           <tbody className="bg-white divide-y divide-gray-200">
             {inventory.map((item, idx) => (
               <tr key={idx} className="hover:bg-gray-50">
-                {/* Item Name */}
                 <td className="px-6 py-4 whitespace-nowrap">{item.item}</td>
-
-                {/* Quantity or Out of Stock */}
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {parseInt(item.quantity) === 0 ? (
-                    <span className="text-red-600 font-bold">Out of Stock</span>
-                  ) : (
-                    item.quantity
-                  )}
-                </td>
-
-                {/* Expiration Date */}
+                <td className="px-6 py-4 whitespace-nowrap">{item.quantity}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{item.expiration}</td>
-
-                {/* Delete Button */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
                     onClick={() => handleDeleteItem(idx)}
@@ -142,43 +128,29 @@ export default function InventoryPage() {
         </table>
       </div>
 
-      {/* Out of Stock Items Table */}
-      <div className="mt-12">
-        <h2 className="text-xl font-bold mb-4">Out of Stock Items</h2>
-
-        <div className="overflow-x-auto bg-white shadow rounded-lg">
+      {/* Out of stock inventory table */}
+      <div className="overflow-x-auto bg-white shadow rounded-lg">
+        <h2 className="text-xl font-bold p-6 pb-0">Out of Stock Items</h2>
+        {outOfStock.length > 0 ? (
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Item
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Expiration
-                </th>
               </tr>
             </thead>
-
             <tbody className="bg-white divide-y divide-gray-200">
-              {outOfStockItems.length > 0 ? (
-                outOfStockItems.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-red-600 font-bold">
-                      {item.item}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{item.expiration}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap" colSpan="2">
-                    No out of stock items.
-                  </td>
+              {outOfStock.map((item, idx) => (
+                <tr key={idx} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-red-600 font-semibold">{item}</td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
-        </div>
+        ) : (
+          <p className="p-6 text-gray-500">No out of stock items currently.</p>
+        )}
       </div>
     </div>
   );

@@ -16,13 +16,13 @@ export const menuData = [
 export const ordersData = [
   {
     date: 'January 27th',
-    vendor: 'Wine Vendor Inc',
+    vendor: 'General Mills',
     arrival: 'January 28th',
   },
   {
-    date: 'January 28th',
-    vendor: 'Fresh Foods LLC',
-    arrival: 'January 29th',
+    date: 'April 21st',
+    vendor: 'The Hershey Company',
+    arrival: 'April 23rd',
   },
 ];
 

@@ -8,9 +8,10 @@ import MenuItemForm from '../../components/MenuItemForm';
 export default function MenuPage() {
   const [menu, setMenu] = useState(menuData);
 
+  // Function to handle adding a new menu item
   const addMenuItem = (newItem) => {
     setMenu([...menu, newItem]);
-    toast("Menu Item Created", {
+    toast('Menu Item Created', {
       description: `${newItem.name} with portion ${newItem.portion}`,
     });
   };
@@ -18,7 +19,8 @@ export default function MenuPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Current Menu</h1>
-      
+
+      {/* Menu Items List */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {menu.map((item, idx) => (
           <div key={idx} className="p-4 border rounded-lg bg-white">

@@ -11,6 +11,7 @@ export default function FoodUsagePage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // make sure item and quantity are not empty
     if (!item || !quantity) return;
 
     const newEntry = {
@@ -19,9 +20,10 @@ export default function FoodUsagePage() {
       date: new Date().toLocaleDateString(),
     };
 
+    // Add the new entry to the usage log
     setUsage([newEntry, ...usage]);
 
-    toast("Food Usage Logged", {
+    toast('Food Usage Logged', {
       description: `${item} - ${quantity} units`,
     });
 
@@ -36,8 +38,8 @@ export default function FoodUsagePage() {
       <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow mb-8">
         <div>
           <label className="block mb-1 font-medium">Item Used</label>
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={item}
             onChange={(e) => setItem(e.target.value)}
             className="border p-2 rounded w-full"
@@ -46,15 +48,18 @@ export default function FoodUsagePage() {
 
         <div>
           <label className="block mb-1 font-medium">Quantity Used</label>
-          <input 
-            type="number" 
+          <input
+            type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             className="border p-2 rounded w-full"
           />
         </div>
 
-        <button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition active:scale-95">
+        <button
+          type="submit"
+          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition active:scale-95"
+        >
           Log Usage
         </button>
       </form>

@@ -3,18 +3,26 @@
 import { useState } from 'react';
 
 export default function SetParLevelsPage() {
-  // State variables
+  // Form input states
   const [item, setItem] = useState('');
   const [level, setLevel] = useState('');
 
+  // State to log par level submissions
+  const [parLog, setParLog] = useState([]);
+
   // Handle form submission
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page refresh on form submit
+    e.preventDefault();
 
-    // Dislay alert with item and level
-    alert(`Par level set: ${item} ➔ ${level}`);
+    // Add new entry to par log
+    const newEntry = {
+      item,
+      level,
+      date: new Date().toLocaleDateString(),
+    };
 
-    // Reset inputs
+    setParLog((prev) => [newEntry, ...prev]);
+
     setItem('');
     setLevel('');
   };
@@ -23,8 +31,8 @@ export default function SetParLevelsPage() {
     <div>
       <h1 className="text-2xl font-bold mb-6">Set Par Levels</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow">
-        {/* Item Name Input */}
+      {/* Par Level Form */}
+      <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow mb-10">
         <div>
           <label className="block mb-1 font-medium">Item Name</label>
           <input
@@ -35,7 +43,6 @@ export default function SetParLevelsPage() {
           />
         </div>
 
-        {/* Par Level Input */}
         <div>
           <label className="block mb-1 font-medium">Desired Par Level</label>
           <input
@@ -53,6 +60,40 @@ export default function SetParLevelsPage() {
           Set Par Level
         </button>
       </form>
+
+      {/* Par Log Table */}
+      <div className="overflow-x-auto bg-white shadow rounded-lg">
+        <h2 className="text-xl font-bold p-6 pb-0">Par Level Log</h2>
+
+        {parLog.length > 0 ? (
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Item
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Par Level
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {parLog.map((entry, idx) => (
+                <tr key={idx} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">{entry.date}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{entry.item}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{entry.level}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="p-6 text-gray-500">No par levels set yet.</p>
+        )}
+      </div>
     </div>
   );
 }
