@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
+// Links within the sidebar
 const menuItems = [
   { label: 'Home', path: '/' },
   { label: 'Menu', path: '/menu' },
@@ -17,17 +18,6 @@ const menuItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const currentIndex = menuItems.findIndex((item) => pathname.startsWith(item.path));
-
-  const goPrevious = () => {
-    const newIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
-    router.push(menuItems[newIndex].path);
-  };
-
-  const goNext = () => {
-    const newIndex = (currentIndex + 1) % menuItems.length;
-    router.push(menuItems[newIndex].path);
-  };
 
   return (
     <div className="w-64 min-h-screen bg-white border-r flex flex-col justify-between">
